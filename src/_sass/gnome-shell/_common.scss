@@ -24,8 +24,8 @@ $corner_radius: 0px;
 //
 // Globals
 //
-$font-size: 10;
-$font-family: Futura Bk bt, Cantarell, Sans-Serif;
+$font-size: 9;
+$font-family: Noto Sans, Futura Bk bt, sans, Sans-Serif;
 $_bubble_bg_color: opacify($osd_bg_color,0.25);
 $_bubble_fg_color: $osd_fg_color;
 $_bubble_borders_color: transparentize($osd_fg_color,0.8);
@@ -1264,13 +1264,21 @@ StScrollBar {
 //
 // Top Bar
 //
+$_wm_border: if($variant=='light', rgba(black, 0.12), rgba(black, 0.25));
 #panel {
   font-weight: bold;
   height: 2.1em;
   min-height: 27px;
   background-color: $panel_bg;
+  background-color: rgba($panel_bg, 0.85);
   border: none;
   font-feature-settings: "tnum";
+  box-shadow: 0 3px 5px 0 if($variant == 'light', rgba(black, 0.15), rgba(black, 0.08)),
+  0 8px 8px 0 if($variant == 'light', rgba(black, 0.15), rgba(black, 0.08)),
+  0 0 0 1px $_wm_border;
+
+  /* transition between transparent / solid */
+  transition-duration: 250ms;
 
   // Fix dynamic top bar extension
   &.dynamic-top-bar-white-btn { border-image: none; }
@@ -1373,9 +1381,8 @@ StScrollBar {
   }
 
   &.solid {
-//    background-color: $header_bg;
-    /* transition from transparent to solid */
-    transition-duration: 250ms;
+    background-color: $panel_bg;
+    box-shadow: none;
     background-gradient-direction: none; // for Ubuntu session
     text-shadow: none; // for Ubuntu session
 
@@ -1417,17 +1424,22 @@ StScrollBar {
 #panel #panelActivities.panel-button {
 
   > * {
-    background-image: url("common-assets/misc/activities.svg");
+    background-image: if($variant == 'light', url("common-assets/misc/activities--light.svg"), url("common-assets/misc/activities.svg"));
     background-position: center top;
     width: 24px;
     height: 24px;
     background-color: transparent !important;
     background-gradient-direction: none !important;
     border: 0 solid transparent !important;
+    fill: $panel_fg;
     text-shadow: 0 0 transparent !important;
     transition-duration: 0ms !important;
     box-shadow: none !important;
     color: transparent;
+
+    &:after {
+      content: '---';
+    }
   }
 
   &:active, &:overview, &:focus, &:checked {
